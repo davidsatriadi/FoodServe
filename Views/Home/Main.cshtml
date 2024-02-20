@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Main";
+    var role = Context.Request.Cookies["role"];
+    if (role == "Administrator")
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout2.cshtml";
+    }
+}
+
+<h2>WELCOME</h2>
+
+  @ViewData["name"]
+ - 
+  @ViewData["role"]

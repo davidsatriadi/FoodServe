@@ -1,0 +1,44 @@
+﻿@model IEnumerable<FoodServe.Models.OrderDetailModel>
+
+<h3>Order Detail </h3>
+<p>
+    <a asp-action="CreateDetail">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderModel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FoodModel)
+            </th> 
+            <th>
+                @Html.DisplayNameFor(model => model.Qty)
+            </th> 
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null) {
+        foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderModel.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FoodModel.FoodName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DetailId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DetailId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DetailId">Delete</a>
+            </td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

@@ -1,0 +1,48 @@
+﻿@model FoodServe.Models.FoodModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>FsFood</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FoodId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FoodId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FoodName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FoodName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FoodPrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FoodPrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ActiveDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ActiveDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FoodId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FoodId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.FoodId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

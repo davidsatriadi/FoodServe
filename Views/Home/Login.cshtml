@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<style>
+    td {
+        padding-right:25px;
+        padding-bottom:5px;
+    }
+</style>
+
+<h2>Login</h2>
+
+
+<div>
+    <table>
+        <tr>
+            <td><label>USERNAME</label></td> 
+            <td><input id="txtUsername" type="text" placeholder="USERNAME" /></td>
+        </tr>
+        <tr>
+            <td><label>PASSWORD</label></td> 
+            <td><input id="txtPassword" type="password" placeholder="password" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <center>
+                    <input id="btnLogin" type="submit" value="LOGIN" required onclick="login()" />
+                </center>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+        async function login() {
+            const apiUrl = 'https://localhost:44319/api/login/login'; 
+            const username = document.getElementById('txtUsername').value;
+            const password = document.getElementById('txtPassword').value;
+
+            const requestBody = {
+                username: username,
+                password: password
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    const apiUrl2 = 'https://localhost:44319/api/USER/' + username
+                    const response2 = await fetch(apiUrl2, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        } 
+                    });
+
+                    const data = await response2.json();
+
+                    document.cookie = "userid=" + username;
+                    document.cookie = "name=" + data.name;
+                    document.cookie = "role=" + data.role;
+
+                    console.log('Login successful');
+                    window.location.href = '/Home/Main/' ;
+                } else {
+                    //console.error('Failed to login. Status code:', response.status);
+                    //const errorResponse = await response.json();
+                    //console.error('Error message:', errorResponse);
+                    window.alert('Invalid Username or Password.');
+                }
+            } catch (error) {
+                console.error('An error occurred during login:', error);
+            }
+        }
+</script>
