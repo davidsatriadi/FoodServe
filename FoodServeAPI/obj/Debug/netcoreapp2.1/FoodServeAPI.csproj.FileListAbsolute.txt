@@ -1,0 +1,14 @@
+D:\project\FoodServe\FoodServeAPI\bin\Debug\netcoreapp2.1\FoodServeAPI.deps.json
+D:\project\FoodServe\FoodServeAPI\bin\Debug\netcoreapp2.1\FoodServeAPI.runtimeconfig.json
+D:\project\FoodServe\FoodServeAPI\bin\Debug\netcoreapp2.1\FoodServeAPI.runtimeconfig.dev.json
+D:\project\FoodServe\FoodServeAPI\bin\Debug\netcoreapp2.1\FoodServeAPI.dll
+D:\project\FoodServe\FoodServeAPI\bin\Debug\netcoreapp2.1\FoodServeAPI.pdb
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.csproj.CoreCompileInputs.cache
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.RazorAssemblyInfo.cache
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.RazorAssemblyInfo.cs
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.AssemblyInfoInputs.cache
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.AssemblyInfo.cs
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.RazorTargetAssemblyInfo.cache
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.dll
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.pdb
+D:\project\FoodServe\FoodServeAPI\obj\Debug\netcoreapp2.1\FoodServeAPI.csprojAssemblyReference.cache
