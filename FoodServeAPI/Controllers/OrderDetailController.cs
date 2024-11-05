@@ -135,5 +135,16 @@ namespace FoodServeAPI.Controllers
         {
             return _context.FsOrderDetail.Any(e => e.DetailId == id);
         }
+
+        //api/orderdetail/total-qty/1
+        [HttpGet("total-qty/{orderId}")]
+        public async Task<IActionResult> GetTotalQtyByOrderId(string orderId)
+        {
+            var totalQty = await _context.FsOrderDetail
+                .Where(order => order.OrderId == orderId)
+                .SumAsync(order => order.Qty);
+
+            return Ok(new { OrderId = orderId, TotalQty = totalQty });
+        }
     }
 }

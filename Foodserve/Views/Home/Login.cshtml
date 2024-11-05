@@ -65,9 +65,10 @@
 
                     const data = await response2.json();
 
-                    document.cookie = "userid=" + username;
-                    document.cookie = "name=" + data.name;
-                    document.cookie = "role=" + data.role;
+                    document.cookie = "userid=" + username + "; path=/";
+                    document.cookie = "name=" + data.name + "; path=/";
+                    document.cookie = "role=" + data.role + "; path=/";                   
+                    
 
                     console.log('Login successful');
                     window.location.href = '/Home/Main/' ;

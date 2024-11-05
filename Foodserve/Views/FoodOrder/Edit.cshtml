@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.2cshtml";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
 <h2>Edit</h2>
@@ -16,12 +16,12 @@
             <input type="hidden" asp-for="OrderId" />
             <div class="form-group">
                 <label asp-for="OrderId" class="control-label"></label>
-                <input asp-for="OrderId" class="form-control" readonly/>
+                <input asp-for="OrderId" class="form-control" readonly />
                 <span asp-validation-for="OrderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.User"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -36,12 +36,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="QtyTotal" class="control-label"></label>
-                <input asp-for="QtyTotal" class="form-control" />
+                <input asp-for="QtyTotal" class="form-control" value="@ViewBag.Qty" />
                 <span asp-validation-for="QtyTotal" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PriceTotal" class="control-label"></label>
-                <input asp-for="PriceTotal" class="form-control" />
+                <input asp-for="PriceTotal" class="form-control" value="@ViewBag.Price" />
                 <span asp-validation-for="PriceTotal" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,6 +49,9 @@
             </div>
         </form>
     </div>
+</div>
+<div style="border:solid; padding:5px">
+    <partial name="Detail" />
 </div>
 
 <div>

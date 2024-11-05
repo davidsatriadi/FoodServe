@@ -12,6 +12,9 @@ namespace FoodServe.Models
         public string FoodId { get; set; }
         public decimal Qty { get; set; }
 
+        public decimal totalQty { get; set; }
+        public string FoodName { get; set; }
+
         public FoodModel FoodModel { get; set; }
         public FoodOrderModel OrderModel { get; set; }
     }

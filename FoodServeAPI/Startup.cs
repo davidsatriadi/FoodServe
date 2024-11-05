@@ -33,7 +33,7 @@ namespace FoodServeAPI
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin",
-                    builder => builder.WithOrigins("http://localhost:53577", "http://localhost")
+                    builder => builder.WithOrigins("http://localhost:44319", "http://localhost", "http://localhost:53577")
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
             });
@@ -54,6 +54,7 @@ namespace FoodServeAPI
             }
             
             app.UseCors("AllowOrigin");
+            app.UseCors("AllowLocalhost");
             app.UseMvc();
             
         }

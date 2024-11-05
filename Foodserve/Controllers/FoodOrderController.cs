@@ -69,17 +69,20 @@ namespace FoodServe.Controllers
             ViewBag.IsClose = new SelectList(isClose);
 
             string orderId = "ABC";
-            orderId = orderId + DateTime.Today.Date.Day.ToString() + DateTime.Today.Month.ToString() + DateTime.Today.Year.ToString() + "-000";
+            orderId = orderId + DateTime.Today.Date.Day.ToString("00") + DateTime.Today.Month.ToString("00") + DateTime.Today.Year.ToString() + "-000";
 
             HttpResponseMessage response2 = _client.GetAsync(_client.BaseAddress + "/FoodOrder/").Result; 
 
             string data2 = response2.Content.ReadAsStringAsync().Result;
             List<FoodOrderModel> orderList = JsonConvert.DeserializeObject<List<FoodOrderModel>>(data2);
-            int orderCount = orderList.Count + 1;
+            var todayOrder = orderList.Where(order => order.OrderDate.Date == DateTime.Today.Date).ToList();
+
+            int orderCount = todayOrder.Count + 1;
 
             orderId = orderId.Substring(0, orderId.Length - orderCount.ToString().Length) + orderCount.ToString();
 
             ViewData["OrderId"] = orderId;
+            TempData["OrderId"] = orderId;
 
             return View();
         }
@@ -131,6 +134,53 @@ namespace FoodServe.Controllers
                 string data = response.Content.ReadAsStringAsync().Result;
                 foodOrder = JsonConvert.DeserializeObject<FoodOrderModel>(data);
             }
+
+            OrderDetailModel orderDetail = new OrderDetailModel();
+            HttpResponseMessage response3 = _client.GetAsync(_client.BaseAddress + "/OrderDetail/").Result;
+            List<OrderDetailModel> orderDetailList = new List<OrderDetailModel>();
+
+            if (response3.IsSuccessStatusCode)
+            {
+                string data3 = response3.Content.ReadAsStringAsync().Result;
+                orderDetailList = JsonConvert.DeserializeObject<List<OrderDetailModel>>(data3).Where(m => m.OrderId == id).ToList();
+
+            }
+
+            List<FoodModel> Food = new List<FoodModel>();
+            HttpResponseMessage response4 = _client.GetAsync(_client.BaseAddress + "/Food/").Result;
+            if (response4.IsSuccessStatusCode)
+            {
+                string FoodData = response4.Content.ReadAsStringAsync().Result;
+                Food = JsonConvert.DeserializeObject<List<FoodModel>>(FoodData).ToList();
+            }
+
+            List<OrderDetailModel> join = (from detail in orderDetailList
+                             join food in Food on detail.FoodId equals food.FoodId
+                             select new OrderDetailModel
+                             {
+                                 OrderId = detail.OrderId,
+                                 DetailId = detail.DetailId,
+                                 Qty = detail.Qty,
+                                 FoodId = food.FoodId,
+                                 FoodName = food.FoodName
+                             }).ToList(); 
+
+            ViewData["OrderDetails"] = join;
+            TempData["OrderId"] = id;
+
+            OrderDetailModel OrderDetail = new OrderDetailModel();
+            HttpResponseMessage responses = _client.GetAsync(_client.BaseAddress + "/OrderDetail/total-qty/" + id).Result;
+
+            if (responses.IsSuccessStatusCode)
+            {
+                string data = responses.Content.ReadAsStringAsync().Result;
+                OrderDetail = JsonConvert.DeserializeObject<OrderDetailModel>(data);
+                
+                ViewBag.Qty = Convert.ToInt32(OrderDetail.totalQty);
+            }
+
+            ViewBag.Price = hitungHarga(id);
+
             return View(foodOrder);
         }
         [HttpPost]
@@ -226,10 +276,83 @@ namespace FoodServe.Controllers
             string data = response.Content.ReadAsStringAsync().Result;
             FoodList = JsonConvert.DeserializeObject<List<FoodModel>>(data);
 
-            ViewBag.Food = new SelectList(FoodList, "food_id", "food_name");  
+            ViewBag.OrderID = TempData["OrderId"];
+
+            ViewBag.Food = new SelectList(FoodList, "FoodId", "FoodName");  
              
 
             return View();
         }
-    }
+        [HttpPost]
+        public IActionResult CreateDetail(OrderDetailModel orderDetail)
+        {
+            try
+            {
+                FoodOrderModel foodOrder = new FoodOrderModel();
+                HttpResponseMessage response2 = _client.GetAsync(_client.BaseAddress + "/FoodOrder/" + orderDetail.OrderId).Result;
+
+                if (response2.IsSuccessStatusCode)
+                {
+                    string data2 = response2.Content.ReadAsStringAsync().Result;
+                    foodOrder = JsonConvert.DeserializeObject<FoodOrderModel>(data2);
+                }
+
+                FoodModel food = new FoodModel();
+                HttpResponseMessage response3 = _client.GetAsync(_client.BaseAddress + "/Food/" + orderDetail.FoodId).Result;
+                if(response3.IsSuccessStatusCode)
+                {
+                    string data3 = response3.Content.ReadAsStringAsync().Result;
+                    food = JsonConvert.DeserializeObject<FoodModel>(data3);
+                }
+
+                orderDetail.FoodModel = food;
+                orderDetail.OrderModel = foodOrder;
+
+                string data = JsonConvert.SerializeObject(orderDetail);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "/OrderDetail/", content).Result;
+                 
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Create Success";
+                    return RedirectToAction("Edit", new { id = orderDetail.OrderId });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return View();
+            }
+            return RedirectToAction("Edit", new { id = orderDetail.OrderId });
+        }
+
+        public int hitungHarga(string orderId)
+        {
+            int result = 0;
+            int temp = 0;
+            
+            List<OrderDetailModel> OrderDetail = new List<OrderDetailModel>();
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/OrderDetail/").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                string data = response.Content.ReadAsStringAsync().Result;
+                OrderDetail = JsonConvert.DeserializeObject<List<OrderDetailModel>>(data).Where(order => order.OrderId == orderId).ToList();
+            }
+
+            foreach (OrderDetailModel item in OrderDetail)
+            {
+                FoodModel food = new FoodModel();
+                HttpResponseMessage responses = _client.GetAsync(_client.BaseAddress + "/Food/" + item.FoodId).Result;
+                string data = responses.Content.ReadAsStringAsync().Result;
+                food = JsonConvert.DeserializeObject<FoodModel>(data);
+
+                temp =  Convert.ToInt32(food.FoodPrice *item.Qty);
+
+                result += temp;
+            } 
+
+            return result;
+        }
+     }
 }
